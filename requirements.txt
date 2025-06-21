@@ -1,0 +1,8 @@
+openmeteo_requests
+openmeteo_sdk
+requests
+requests-cache
+retry-requests
+setuptools
+pyyaml
+pandas
