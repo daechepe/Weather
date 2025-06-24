@@ -320,7 +320,7 @@ services:
     entrypoint: [ "/bin/bash", "-c" ]
 
   dash-bi:
-    build: ./dash/Docker/.
+    build: ./dash/.
     container_name: dash_BI
     ports:
       - 8050:8050
