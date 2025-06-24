@@ -4,7 +4,8 @@ from plotly.graph_objs import Figure
 import os
 import pandas as pd
 
-weather_df = pd.read_parquet('/app/data/Weather.parquet')
+weather_df = pd.read_parquet('/app/data/Weather.parquet', engine="pyarrow")
+weather_df['day'] = pd.to_datetime(weather_df['day'])
 weather_df['Year'] = weather_df['day'].dt.year
 weather_df['Month_number'] = weather_df['day'].dt.month
 weather_df['Quarter'] = pd.to_datetime(weather_df['day']).dt.to_period('Q').astype(str)
