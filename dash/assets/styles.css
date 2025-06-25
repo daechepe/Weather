@@ -1,0 +1,46 @@
+body {
+    background: #74B2C1;
+    font-family: "Roboto";
+}
+
+.logo {
+    display: block;
+    width: auto;
+    max-height: 50px;
+}
+
+.grid-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.grid-item {
+    flex: 1;  /* Each column takes equal width */
+    padding: 20px;
+    background-color: #74B2C1;
+    color: #ffff;
+}
+
+/* Change dropdown font color */
+.grid-item_dropdown .Select-control {
+    color: #74B2C1 !important; /* Change font color */
+    font-size: 16px; /* Adjust font size */
+}
+
+/* Change dropdown selected option color */
+.grid-item_dropdown .Select-value {
+    color: #74B2C1 !important; /* Selected text color */
+}
+
+/* Change dropdown options font color */
+.grid-item_dropdown .Select-menu-outer {
+    color: #74B2C1 !important; /* Dropdown options text color */
+}
+
+/* Responsive: Stack columns on small screens */
+@media screen and (max-width: 768px) {
+    .grid-container {
+        flex-direction: column; /* Stack items vertically */
+    }
+}

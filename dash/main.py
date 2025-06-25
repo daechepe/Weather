@@ -39,19 +39,29 @@ def filter_data(df: pd.DataFrame, segment:list, category:str) -> pd.DataFrame:
     return df.query(" and ".join(query)) if query else df
 
 def dash_layout (app: Dash) -> None:
+    fig = px.line(
+        weather_df.groupby(['city','Month']).mean('temperature_2m').reset_index(),
+        x='Month',
+        y='temperature_2m',  # Change this to your column name
+        title='Average Temperature by Month',
+        color='city'
+    )
+    fig = chart_layout(fig)
+
     app.layout = html.Div([
         html.Div(children=[
             html.Img(src='/app/assets/D_logo.svg',
                      className='logo',),
             html.H5(children='By Daniel Echeverri Pérez', style={'color': '#ffff'}),
             ], className='grid-container'),
+        dcc.Graph(figure=fig)
     ])
 
 def run():
     app = Dash(__name__, title='Weather', external_stylesheets=[
     "https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap"])
     dash_layout(app)
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=8050, debug=True)
 
 if __name__ == '__main__':
     run()
