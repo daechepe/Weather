@@ -43,6 +43,7 @@ def __serializer__(data):
         hourly = response.Hourly()
         hourly_temperature_2m = hourly.Variables(0).ValuesAsNumpy()
         hourly_rain = hourly.Variables(1).ValuesAsNumpy()
+        hourly_humidity = hourly.Variables(2).ValuesAsNumpy()
 
         # Creamos rango de fechas en UTC
         utc_times = pd.date_range(
@@ -60,6 +61,7 @@ def __serializer__(data):
             "date": local_times.strftime('%Y-%m-%dT%H:%M:%S%z').tolist(),  # Fechas a string ISO
             "temperature_2m": hourly_temperature_2m.tolist(),             # numpy arrays a lista
             "rain": hourly_rain.tolist(),
+            "humidity": hourly_humidity.tolist(),
             "timezone": decoded_response,
             "zone": decoded_response.split('/')[0],
             "city": decoded_response.split('/')[-1]
