@@ -1,7 +1,7 @@
 api:
   base_url: "https://historical-forecast-api.open-meteo.com/v1/forecast"
-  latitude: [52.52, 4.6097, -33.8678, -15.7797, -34.6131, 50,1155]
-  longitude: [13.41, -74.0817, 151.2073, -47.9297, -58.3772, 8,6842]
+  latitude: [52.52, 4.6097, -33.8678, -15.7797, -34.6131]
+  longitude: [13.41, -74.0817, 151.2073, -47.9297, -58.3772]
   start_date: "2022-01-01"
   end_date: "2025-06-18"
   hourly: ["temperature_2m", "rain", "relative_humidity_2m"]
