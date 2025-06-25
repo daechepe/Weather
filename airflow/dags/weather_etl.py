@@ -80,8 +80,26 @@ with (DAG(
         python_callable=_get_dataframe_day
     )
 
-    def _get_final_df(ti):
+    def _get_dataframe_month(ti):
         data = ti.xcom_pull(task_ids='get_hour')
+        return add_month(data)
+
+    get_month_from_datetime = PythonOperator(
+        task_id='get_month',
+        python_callable=_get_dataframe_month
+    )
+
+    def _get_dataframe_season(ti):
+        data = ti.xcom_pull(task_ids='get_month')
+        return assign_climate(data)
+
+    get_season_climate = PythonOperator(
+        task_id='get_season',
+        python_callable=_get_dataframe_season
+    )
+
+    def _get_final_df(ti):
+        data = ti.xcom_pull(task_ids='get_season')
         save_parquet(data, config['storage']['processed'] + "Weather.parquet")
     
     save_processed = PythonOperator(
@@ -91,4 +109,5 @@ with (DAG(
 
     extract_data >> [save_to_raw, editable_format]
     editable_format >> [create_table, save_enrich]
-    create_table >> get_day_from_datetime >> get_hour_from_datetime >> save_processed
+    create_table >> get_day_from_datetime >> get_hour_from_datetime >> get_month_from_datetime
+    get_month_from_datetime >> get_season_climate >> save_processed

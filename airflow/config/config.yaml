@@ -11,3 +11,12 @@ storage:
   raw: "/data/raw/"
   enriched: "/data/enriched/"
   processed: "/data/processed/"
+
+params:
+  city_climate_map: {
+    'Berlin': 'temperate',
+    'Bogota': 'equatorial',
+    'Sydney': 'southern_temperate',
+    'Sao_Paulo': 'southern_temperate',
+    'Buenos_Aires': 'southern_temperate',
+  }
