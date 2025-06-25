@@ -27,7 +27,7 @@ def add_day(df:pd.DataFrame) -> pd.DataFrame:
 
 def add_month(df:pd.DataFrame) -> pd.DataFrame:
     df['date'] = pd.to_datetime(df['date'], utc=True)
-    df["mont_num"] = df["date"].dt.month
+    df["month_num"] = df["date"].dt.month
     return df
 
 def add_hour(df:pd.DataFrame)-> pd.DataFrame:
@@ -36,7 +36,7 @@ def add_hour(df:pd.DataFrame)-> pd.DataFrame:
     return df
 
 def __assign_season__(row)-> str:
-    month = row['temperature_2m']
+    month = row['month_num']
     climate = row['climate']
 
     if climate == 'temperate':

@@ -30,31 +30,82 @@ def chart_layout(fig: Figure) -> Figure:
         }
     )
 
-def filter_data(df: pd.DataFrame, segment:list, category:str) -> pd.DataFrame:
-    query = []
-    if category:
-        query.append(f'category_name == "{category}"')
-    if segment:
-        query.append(f'item_segment in {segment}')
-    return df.query(" and ".join(query)) if query else df
+@callback(
+    Output("total_metrics", "figure"),
+    Input("item_city", "value"),
+    Input("item_season", "value")
+)
+def update_temperature_plot(selected_city, selected_season):
+    df_filtered = weather_df.copy()
+
+    if selected_city:
+        df_filtered = df_filtered[df_filtered["city"] == selected_city]
+    if selected_season:
+        df_filtered = df_filtered[df_filtered["season"] == selected_season]
+
+    fig = px.line(
+        df_filtered.groupby(['city', 'Month']).mean(numeric_only=True).reset_index(),
+        x='Month',
+        y='temperature_2m',
+        title='Average Temperature by Month',
+        color='city',
+        markers=True,
+    )
+    return chart_layout(fig)
+
+@callback(
+    Output("graph", "figure"),
+    Input("x-axis", "value"),
+    Input("y-axis", "value"),
+    Input("item_city", "value"),
+    Input("item_season", "value")
+)
+def generate_chart(x, y, selected_city, selected_season):
+    df_filtered = weather_df.copy()
+    if selected_city:
+        df_filtered = df_filtered[df_filtered["city"] == selected_city]
+    if selected_season:
+        df_filtered = df_filtered[df_filtered["season"] == selected_season]
+    fig = px.box(df_filtered, x=x, y=y)
+    return fig
 
 def dash_layout (app: Dash) -> None:
-    fig = px.line(
-        weather_df.groupby(['city','Month']).mean('temperature_2m').reset_index(),
-        x='Month',
-        y='temperature_2m',  # Change this to your column name
-        title='Average Temperature by Month',
-        color='city'
-    )
-    fig = chart_layout(fig)
-
     app.layout = html.Div([
         html.Div(children=[
-            html.Img(src='/app/assets/D_logo.svg',
-                     className='logo',),
+            html.Img(
+                src='./assets/D_logo_neg.svg',
+                className='logo', ),
             html.H5(children='By Daniel Echeverri Pérez', style={'color': '#ffff'}),
+        ], className='grid-container'),
+        html.Div(children=[
+            html.Div(children=[
+                html.Label('City'),
+                dcc.Dropdown(id='item_city', options=weather_df['city'].unique().tolist(),
+                             placeholder='Select City',  className="grid-item_dropdown"),
+            ], className="grid-item"),
+            html.Div(children=[
+                html.Label('Season'),
+                dcc.Dropdown(id='item_season', options=weather_df['season'].unique().tolist(),
+                             placeholder='Select Season', className="grid-item_dropdown"),
+            ], className="grid-item"),
+        ], className='grid-container'),
+
+        html.Div(children=[
+            dcc.Graph(id='total_metrics', figure={}),
+            html.Div(children=[
+                html.Div(children=[
+                    html.Label('y-axis'),
+                    dcc.Dropdown(id='y-axis', options=['temperature_2m', 'rain'],
+                                 value='temperature_2m', className="grid-item_dropdown"),
+                ], className="grid-item"),
+                html.Div(children=[
+                    html.Label('x-axis'),
+                    dcc.Dropdown(id='x-axis', options=['zone', 'climate', 'season', 'Month', 'city'],
+                                 value='zone', className="grid-item_dropdown"),
+                ], className="grid-item"),
             ], className='grid-container'),
-        dcc.Graph(figure=fig)
+            dcc.Graph(id='graph', figure={}),
+        ]),
     ])
 
 def run():
