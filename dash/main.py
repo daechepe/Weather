@@ -130,7 +130,7 @@ def dash_layout (app: Dash) -> None:
 
 def run():
     app = Dash(__name__, title='Weather', external_stylesheets=[
-    "https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap"],assets_folder='./assets')
+    "https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap"])
     dash_layout(app)
     app.run(host='0.0.0.0', port=8050, debug=True)
 
